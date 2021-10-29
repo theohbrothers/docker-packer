@@ -7,19 +7,19 @@ RUN echo "I am running on `$BUILDPLATFORM, building for `$TARGETPLATFORM"
 # Install packer
 RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get update \
-    && apt-get install --no-install-recommends -y $buildDeps \
-    && curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - \
+    && apt-get install --no-install-recommends -y `$buildDeps \
+    && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com `$(lsb_release -cs) main" \
     && apt-get update \
-    && sudo apt-get install packer=$( $VARIANT['_metadata']['package_version'] )
-    && apt-get purge --auto-remove $buildDeps \
+    && apt-get install --no-install-recommends -y packer=$( $VARIANT['_metadata']['package_version'] ) \
+    && apt-get purge --auto-remove -y `$buildDeps \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install runtime dependencies
+# Install runtime dependencie
 RUN runDeps="wget libguestfs-tools isolinux squashfs-tools xorriso mkisofs" \
     && apt-get update \
-    && apt-get install --no-install-recommends -y $runDeps \
+    && apt-get install --no-install-recommends -y `$runDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -43,7 +43,7 @@ RUN apk add --no-cache libressl
 RUN wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops && chmod +x /usr/local/bin/sops
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y gnupg \
+    && apt-get install --no-install-recommends -y gnupg2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
