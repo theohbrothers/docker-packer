@@ -15,10 +15,10 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install basic tools Prevent apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
+# Install basic tools. Prevent apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
     && apt-get update \
-    && apt-get install --no-install-recommends -y sudo ca-certificates wget curl git \
+    && apt-get install --no-install-recommends -y sudo ca-certificates wget curl git rsync \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
