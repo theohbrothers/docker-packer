@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
@@ -22,15 +22,4 @@ RUN runDeps="wget libguestfs-tools isolinux squashfs-tools xorriso mkisofs" \
     && apt-get install --no-install-recommends -y $runDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
-# RUN apt-get update \
-# && apt-get install --no-install-recommends -y virtualbox-ext-pack \
-# && apt-get clean \
-# && rm -rf /var/lib/apt/lists/*
 

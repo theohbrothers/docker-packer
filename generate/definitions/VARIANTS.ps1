@@ -5,9 +5,19 @@ $local:VARIANTS_MATRIX = @(
         package = 'packer'
         package_version = '1.7.7'
         distro = 'ubuntu'
-        distro_version = '18.04'
+        distro_version = '20.04'
         subvariants = @(
             @{ components = @(); tag_as_latest = $true }
+            @{ components = @( 'virtualbox' ) }
+        )
+    }
+    @{
+        package = 'packer'
+        package_version = '1.7.7'
+        distro = 'ubuntu'
+        distro_version = '18.04'
+        subvariants = @(
+            @{ components = @() }
             @{ components = @( 'virtualbox' ) }
         )
     }
