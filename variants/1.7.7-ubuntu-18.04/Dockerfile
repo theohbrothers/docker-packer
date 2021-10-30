@@ -15,9 +15,11 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install runtime dependencie
+# Install runtime dependencies. Prevent apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
 RUN runDeps="wget libguestfs-tools isolinux squashfs-tools xorriso mkisofs" \
     && apt-get update \
+    && echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
     && apt-get install --no-install-recommends -y $runDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
