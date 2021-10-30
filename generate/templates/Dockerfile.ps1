@@ -16,11 +16,24 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install runtime dependencies. Prevent apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
-RUN runDeps="sudo ca-certificates wget curl git libguestfs-tools isolinux squashfs-tools xorriso mkisofs" \
+# Install basic tools Prevent apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
     && apt-get update \
-    && echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
-    && apt-get install --no-install-recommends -y `$runDeps \
+    && apt-get install --no-install-recommends -y sudo ca-certificates wget curl git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install tools for .vhd, .vmdk
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y libguestfs-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install tools for .iso.
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y sudo isolinux squashfs-tools xorriso mkisofs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
