@@ -23,9 +23,14 @@ RUN apt-get update \
 
 # Install tools for .vhd, .vmdk
 # Fix apt dialog: https://github.com/moby/moby/issues/27988#issuecomment-462809153
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
-    && apt-get update \
+# Fix guestmount error 'supermin: failed to find a suitable kernel (host_cpu=x86_64)': https://github.com/steigr/docker-hipchat-server/issues/1
+RUN apt-get update \
+    \
+    && echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
     && apt-get install --no-install-recommends -y libguestfs-tools \
+    \
+    && apt-get install --no-install-recommends -y linux-image-generic \
+    \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
