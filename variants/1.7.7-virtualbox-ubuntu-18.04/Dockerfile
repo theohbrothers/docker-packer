@@ -41,8 +41,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install tools for storage
+# s3fs: https://github.com/s3fs-fuse/s3fs-fuse
 # mc: https://min.io/download#/linux
-RUN wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc \
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y s3fs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    \
+    && wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc \
     && chmod +x /usr/local/bin/mc \
     && sha256sum /usr/local/bin/mc | grep aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93
 
