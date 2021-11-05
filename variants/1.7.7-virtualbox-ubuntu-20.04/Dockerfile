@@ -42,7 +42,7 @@ RUN apt-get update \
 
 # Install tools for storage
 # mc: https://min.io/download#/linux
-RUN wget -qO- https://dl.min.io/client/mc/release/linux-amd64/mc > /usr/local/bin/mc \
+RUN wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc \
     && chmod +x /usr/local/bin/mc \
     && sha256sum /usr/local/bin/mc | grep aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93
 
