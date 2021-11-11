@@ -4,6 +4,9 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on `$BUILDPLATFORM, building for `$TARGETPLATFORM"
 
+# Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
+ENV CHECKPOINT_DISABLE=1
+
 # Install packer
 RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get update \
