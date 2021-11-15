@@ -8,7 +8,7 @@ $local:VARIANTS_MATRIX = @(
         distro_version = '20.04'
         subvariants = @(
             @{ components = @(); tag_as_latest = $true }
-            @{ components = @( 'virtualbox' ) }
+            @{ components = @( 'virtualbox-6.1.28' ) }
         )
     }
     @{
@@ -18,7 +18,7 @@ $local:VARIANTS_MATRIX = @(
         distro_version = '18.04'
         subvariants = @(
             @{ components = @() }
-            @{ components = @( 'virtualbox' ) }
+            @{ components = @( 'virtualbox-6.1.28' ) }
         )
     }
 )

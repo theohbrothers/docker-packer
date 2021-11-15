@@ -85,12 +85,18 @@ RUN apt-get update \
 "@
         }
 
-        'virtualbox' {
+        'virtualbox-6.1.28' {
                 @"
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install virtualbox using .deb installer instead of apt
+# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
+RUN wget -qO- https://download.virtualbox.org/virtualbox/6.1.28/virtualbox-6.1_6.1.28-147628~Ubuntu~eoan_amd64.deb > /root/virtualbox.deb \
+    && sha256sum /root/virtualbox.deb | grep e3078f3a1af0e8692acaa37587d46a33ee17b490110c2491bd9179938822d7be \
+    && apt-get install -y /root/virtualbox.deb \
+    && rm -f /root/virtualbox.deb
+# RUN apt-get update \
+#     && apt-get install --no-install-recommends -y virtualbox \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
 # RUN apt-get update \
