@@ -85,13 +85,22 @@ RUN apt-get update \
 "@
         }
 
-        'virtualbox' {
+        'virtualbox-6.1' {
                 @"
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox \
+# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
+RUN buildDeps="gnupg2 wget software-properties-common" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y `$buildDeps \
+    && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
+    && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
+    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian `$(lsb_release -cs) contrib" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y virtualbox-6.1 \
+    && apt-get purge --auto-remove -y `$buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
 # Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
 # RUN apt-get update \
 # && apt-get install --no-install-recommends -y virtualbox-ext-pack \
