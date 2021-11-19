@@ -1,8 +1,7 @@
-@"
-FROM $( $VARIANT['_metadata']['distro'] ):$( $VARIANT['_metadata']['distro_version'] )
+FROM ubuntu:18.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-RUN echo "I am running on `$BUILDPLATFORM, building for `$TARGETPLATFORM"
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 
 # Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
 ENV CHECKPOINT_DISABLE=1
@@ -10,12 +9,12 @@ ENV CHECKPOINT_DISABLE=1
 # Install packer
 RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get update \
-    && apt-get install --no-install-recommends -y `$buildDeps \
+    && apt-get install --no-install-recommends -y $buildDeps \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com `$(lsb_release -cs) main" \
+    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
     && apt-get update \
-    && apt-get install --no-install-recommends -y packer=$( $VARIANT['_metadata']['package_version'] ) \
-    && apt-get purge --auto-remove -y `$buildDeps \
+    && apt-get install --no-install-recommends -y packer=1.7.7 \
+    && apt-get purge --auto-remove -y $buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -56,24 +55,6 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/mc \
     && sha256sum /usr/local/bin/mc | grep aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93
 
-
-"@
-
-$VARIANT['_metadata']['components'] | % {
-    $component = $_
-
-    switch( $component ) {
-
-        'sops' {
-            if ( $VARIANT['_metadata']['distro'] -eq 'alpine' -and $VARIANT['_metadata']['distro_version'] -eq '3.6' ) {
-                @"
-# Fix wget not working in alpine:3.6. https://github.com/gliderlabs/docker-alpine/issues/423
-RUN apk add --no-cache libressl
-
-
-"@
-            }
-            @"
 RUN wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops \
     && chmod +x /usr/local/bin/sops \
     && sha256sum /usr/local/bin/sops | grep 185348fd77fc160d5bdf3cd20ecbc796163504fd3df196d7cb29000773657b74
@@ -83,22 +64,16 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-"@
-        }
-
-        'virtualbox-6.1' {
-                @"
 # Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
 RUN buildDeps="gnupg2 wget software-properties-common" \
     && apt-get update \
-    && apt-get install --no-install-recommends -y `$buildDeps \
+    && apt-get install --no-install-recommends -y $buildDeps \
     && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
     && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian `$(lsb_release -cs) contrib" \
+    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" \
     && apt-get update \
     && apt-get install --no-install-recommends -y virtualbox-6.1 \
-    && apt-get purge --auto-remove -y `$buildDeps \
+    && apt-get purge --auto-remove -y $buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -109,12 +84,3 @@ RUN buildDeps="gnupg2 wget software-properties-common" \
 # && apt-get clean \
 # && rm -rf /var/lib/apt/lists/*
 
-
-"@
-        }
-
-        default {
-            throw "No such component: $component"
-        }
-    }
-}
