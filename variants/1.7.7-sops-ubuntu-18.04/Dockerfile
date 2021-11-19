@@ -18,6 +18,21 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install sops, gpg for sops
+RUN buildDeps="wget" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y $buildDeps \
+    && wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops \
+    && chmod +x /usr/local/bin/sops \
+    && sha256sum /usr/local/bin/sops | grep 185348fd77fc160d5bdf3cd20ecbc796163504fd3df196d7cb29000773657b74 \
+    && apt-get purge --auto-remove -y $buildDeps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y gnupg2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install basic tools
 RUN apt-get update \
     && apt-get install --no-install-recommends -y sudo ca-certificates wget curl git rsync \
@@ -54,13 +69,3 @@ RUN apt-get update \
     && wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc \
     && chmod +x /usr/local/bin/mc \
     && sha256sum /usr/local/bin/mc | grep aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93
-
-RUN wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops \
-    && chmod +x /usr/local/bin/sops \
-    && sha256sum /usr/local/bin/sops | grep 185348fd77fc160d5bdf3cd20ecbc796163504fd3df196d7cb29000773657b74
-
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y gnupg2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
