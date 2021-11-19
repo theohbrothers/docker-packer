@@ -18,6 +18,41 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install sops, gpg for sops
+RUN buildDeps="wget" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y $buildDeps \
+    && wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops \
+    && chmod +x /usr/local/bin/sops \
+    && sha256sum /usr/local/bin/sops | grep 185348fd77fc160d5bdf3cd20ecbc796163504fd3df196d7cb29000773657b74 \
+    && apt-get purge --auto-remove -y $buildDeps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y gnupg2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
+RUN buildDeps="gnupg2 wget software-properties-common" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y $buildDeps \
+    && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
+    && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
+    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y virtualbox-6.1 \
+    && apt-get purge --auto-remove -y $buildDeps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
+# Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
+# RUN apt-get update \
+# && apt-get install --no-install-recommends -y virtualbox-ext-pack \
+# && apt-get clean \
+# && rm -rf /var/lib/apt/lists/*
+
 # Install basic tools
 RUN apt-get update \
     && apt-get install --no-install-recommends -y sudo ca-certificates wget curl git rsync \
@@ -54,33 +89,3 @@ RUN apt-get update \
     && wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc \
     && chmod +x /usr/local/bin/mc \
     && sha256sum /usr/local/bin/mc | grep aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93
-
-RUN wget -qO- https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux > /usr/local/bin/sops \
-    && chmod +x /usr/local/bin/sops \
-    && sha256sum /usr/local/bin/sops | grep 185348fd77fc160d5bdf3cd20ecbc796163504fd3df196d7cb29000773657b74
-
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y gnupg2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
-RUN buildDeps="gnupg2 wget software-properties-common" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y $buildDeps \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox-6.1 \
-    && apt-get purge --auto-remove -y $buildDeps \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
-# Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
-# RUN apt-get update \
-# && apt-get install --no-install-recommends -y virtualbox-ext-pack \
-# && apt-get clean \
-# && rm -rf /var/lib/apt/lists/*
-
