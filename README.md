@@ -15,3 +15,16 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 | `:1.7.7-sops-ubuntu-18.04` | [View](variants/1.7.7-sops-ubuntu-18.04 ) |
 | `:1.7.7-sops-virtualbox-6.1-ubuntu-18.04` | [View](variants/1.7.7-sops-virtualbox-6.1-ubuntu-18.04 ) |
 
+## Development
+
+Requires Windows `powershell` or [`pwsh`](https://github.com/PowerShell/PowerShell).
+
+```powershell
+# Install Generate-DockerImageVariants module: https://github.com/theohbrothers/Generate-DockerImageVariants
+Install-Module -Name Generate-DockerImageVariants -Repository PSGallery -Scope CurrentUser -Force -Verbose
+
+# Edit ./generate templates
+
+# Generate the variants
+Generate-DockerImageVariants .
+```
