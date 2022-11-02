@@ -23,20 +23,16 @@ RUN buildDeps="gnupg2 curl software-properties-common" \
 "@
 
 $VARIANT['_metadata']['components'] | % {
-    $component = $_
-
-    switch( $component ) {
-
-        'sops' {
-            if ( $VARIANT['_metadata']['distro'] -eq 'alpine' -and $VARIANT['_metadata']['distro_version'] -eq '3.6' ) {
-                @"
+    if ($_ -eq 'sops') {
+        if ( $VARIANT['_metadata']['distro'] -eq 'alpine' -and $VARIANT['_metadata']['distro_version'] -eq '3.6' ) {
+            @"
 # Fix wget not working in alpine:3.6. https://github.com/gliderlabs/docker-alpine/issues/423
 RUN apk add --no-cache libressl
 
 
 "@
-            }
-            @"
+        }
+        @"
 # Install sops, gpg for sops
 RUN buildDeps="wget" \
     && apt-get update \
@@ -54,24 +50,41 @@ RUN apt-get update \
 
 
 "@
-        }
+    }
 
-        'virtualbox-6.1' {
-                @"
+    if ($_ -match 'virtualbox-([^-]+)') {
+        $version = $matches[1]
+        $codename = & {
+            if ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '16.04') {
+                'xenial'
+            }elseif ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '18.04') {
+                'bionic'
+            }else {
+                'eoan'
+            }
+        }
+        @"
 # Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
-RUN buildDeps="gnupg2 wget software-properties-common" \
+# Dynamically determine the package, using the SHA256SUMS file, because there is a 5 digit number suffix in the version that is unknown
+# E.g. https://download.virtualbox.org/virtualbox/6.1.22/virtualbox-6.1_6.1.22-144080~Ubuntu~eoan_amd64.deb
+RUN export DEBIAN_FRONTEND=noninteractive \
+    buildDeps="curl build-essential dkms" \
     && apt-get update \
     && apt-get install --no-install-recommends -y `$buildDeps \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian `$(lsb_release -cs) contrib" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox-6.1 \
+    && curl -sSLO "https://download.virtualbox.org/virtualbox/$version/SHA256SUMS" \
+    && FILE="`$( cat SHA256SUMS | grep 'Ubuntu~${codename}_amd64.deb' | awk '{print `$2}' | cut -d '*' -f2 )" \
+    && PACKAGE="https://download.virtualbox.org/virtualbox/$version/`$FILE" \
+    && curl -sSLO "`$PACKAGE" \
+    && cat SHA256SUMS | grep "`$FILE" | sha256sum -c \
+    && apt-get install --no-install-recommends -y "./`$FILE" \
+    && vboxmanage --version \
+    && rm -f "`$FILE" \
     && apt-get purge --auto-remove -y `$buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
+# E.g. https://download.virtualbox.org/virtualbox/6.1.22/Oracle_VM_VirtualBox_Extension_Pack-6.1.22.vbox-extpack
 # Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
 # RUN apt-get update \
 # && apt-get install --no-install-recommends -y virtualbox-ext-pack \
@@ -80,11 +93,6 @@ RUN buildDeps="gnupg2 wget software-properties-common" \
 
 
 "@
-        }
-
-        default {
-            throw "No such component: $component"
-        }
     }
 }
 

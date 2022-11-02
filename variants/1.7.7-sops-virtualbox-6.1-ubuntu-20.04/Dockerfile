@@ -34,19 +34,26 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
-RUN buildDeps="gnupg2 wget software-properties-common" \
+# Dynamically determine the package, using the SHA256SUMS file, because there is a 5 digit number suffix in the version that is unknown
+# E.g. https://download.virtualbox.org/virtualbox/6.1.22/virtualbox-6.1_6.1.22-144080~Ubuntu~eoan_amd64.deb
+RUN export DEBIAN_FRONTEND=noninteractive \
+    buildDeps="curl build-essential dkms" \
     && apt-get update \
     && apt-get install --no-install-recommends -y $buildDeps \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add - \
-    && wget -qO- https://www.virtualbox.org/download/oracle_vbox.asc | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y virtualbox-6.1 \
+    && curl -sSLO "https://download.virtualbox.org/virtualbox/6.1.26/SHA256SUMS" \
+    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~eoan_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
+    && PACKAGE="https://download.virtualbox.org/virtualbox/6.1.26/$FILE" \
+    && curl -sSLO "$PACKAGE" \
+    && cat SHA256SUMS | grep "$FILE" | sha256sum -c \
+    && apt-get install --no-install-recommends -y "./$FILE" \
+    && vboxmanage --version \
+    && rm -f "$FILE" \
     && apt-get purge --auto-remove -y $buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
+# E.g. https://download.virtualbox.org/virtualbox/6.1.22/Oracle_VM_VirtualBox_Extension_Pack-6.1.22.vbox-extpack
 # Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
 # RUN apt-get update \
 # && apt-get install --no-install-recommends -y virtualbox-ext-pack \
