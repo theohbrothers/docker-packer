@@ -11,7 +11,26 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 | Tag | Dockerfile Build Context |
 |:-------:|:---------:|
 | `:1.7.7-sops-ubuntu-20.04`, `:latest` | [View](variants/1.7.7-sops-ubuntu-20.04 ) |
-| `:1.7.7-sops-virtualbox-6.1-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1-ubuntu-20.04 ) |
+| `:1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04 ) |
+
+
+## Usage
+
+
+```sh
+docker run --rm -it \
+    -v $(pwd):/src \
+    -w /src \
+    theohbrothers/docker-packer:1.7.7-sops-ubuntu-20.04 sh -c 'packer --version && packer build .'
+
+# virtualbox
+# The host must have an exact matching virtualbox version, in this case, virtualbox 6.1.26
+docker run --rm -it \
+    -v /dev/vboxdrv:/dev/vboxdrv:ro \
+    -v $(pwd):/src \
+    -w /src \
+    theohbrothers/docker-packer:1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04 sh -c 'packer --version && vboxmanage --version && packer build .'
+```
 
 ## Development
 
