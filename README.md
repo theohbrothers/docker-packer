@@ -11,7 +11,11 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 | Tag | Dockerfile Build Context |
 |:-------:|:---------:|
 | `:1.7.7-sops-ubuntu-20.04`, `:latest` | [View](variants/1.7.7-sops-ubuntu-20.04 ) |
+| `:1.7.7-sops-virtualbox-7.0.2-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-7.0.2-ubuntu-20.04 ) |
+| `:1.7.7-sops-virtualbox-6.1.40-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.40-ubuntu-20.04 ) |
 | `:1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04 ) |
+| `:1.7.7-sops-virtualbox-6.0.24-ubuntu-18.04` | [View](variants/1.7.7-sops-virtualbox-6.0.24-ubuntu-18.04 ) |
+| `:1.7.7-sops-virtualbox-5.2.44-ubuntu-16.04` | [View](variants/1.7.7-sops-virtualbox-5.2.44-ubuntu-16.04 ) |
 
 
 ## Usage

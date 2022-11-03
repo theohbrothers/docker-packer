@@ -46,9 +46,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     buildDeps="curl build-essential dkms" \
     && apt-get update \
     && apt-get install --no-install-recommends -y $buildDeps \
-    && curl -sSLO "https://download.virtualbox.org/virtualbox/6.1.26/SHA256SUMS" \
-    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~eoan_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
-    && PACKAGE="https://download.virtualbox.org/virtualbox/6.1.26/$FILE" \
+    && curl -sSLO "https://download.virtualbox.org/virtualbox/7.0.2/SHA256SUMS" \
+    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~focal_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
+    && PACKAGE="https://download.virtualbox.org/virtualbox/7.0.2/$FILE" \
     && curl -sSLO "$PACKAGE" \
     && cat SHA256SUMS | grep "$FILE" | sha256sum -c \
     && apt-get install --no-install-recommends -y "./$FILE" \

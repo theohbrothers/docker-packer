@@ -6,8 +6,14 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 # Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
 ENV CHECKPOINT_DISABLE=1
 
+# Install apt dependencies
+RUN apt-get update \
+    && apt-get install -y apt-transport-https ca-certificates gnupg2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install packer
-RUN buildDeps="gnupg2 curl software-properties-common" \
+RUN buildDeps="curl gnupg2 software-properties-common" \
     && apt-get update \
     && apt-get install --no-install-recommends -y $buildDeps \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \

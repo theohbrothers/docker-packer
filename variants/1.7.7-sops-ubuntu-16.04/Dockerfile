@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:16.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
@@ -6,14 +6,8 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 # Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
 ENV CHECKPOINT_DISABLE=1
 
-# Install apt dependencies
-RUN apt-get update \
-    && apt-get install -y apt-transport-https ca-certificates gnupg2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install packer
-RUN buildDeps="curl gnupg2 software-properties-common" \
+RUN buildDeps="gnupg2 curl software-properties-common" \
     && apt-get update \
     && apt-get install --no-install-recommends -y $buildDeps \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
@@ -38,33 +32,6 @@ RUN apt-get update \
     && apt-get install --no-install-recommends -y gnupg2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
-# Dynamically determine the package, using the SHA256SUMS file, because there is a 5 digit number suffix in the version that is unknown
-# E.g. https://download.virtualbox.org/virtualbox/6.1.22/virtualbox-6.1_6.1.22-144080~Ubuntu~eoan_amd64.deb
-RUN export DEBIAN_FRONTEND=noninteractive \
-    buildDeps="curl build-essential dkms" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y $buildDeps \
-    && curl -sSLO "https://download.virtualbox.org/virtualbox/6.1.26/SHA256SUMS" \
-    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~eoan_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
-    && PACKAGE="https://download.virtualbox.org/virtualbox/6.1.26/$FILE" \
-    && curl -sSLO "$PACKAGE" \
-    && cat SHA256SUMS | grep "$FILE" | sha256sum -c \
-    && apt-get install --no-install-recommends -y "./$FILE" \
-    && vboxmanage --version \
-    && rm -f "$FILE" \
-    && apt-get purge --auto-remove -y $buildDeps \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
-# E.g. https://download.virtualbox.org/virtualbox/6.1.22/Oracle_VM_VirtualBox_Extension_Pack-6.1.22.vbox-extpack
-# Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
-# RUN apt-get update \
-# && apt-get install --no-install-recommends -y virtualbox-ext-pack \
-# && apt-get clean \
-# && rm -rf /var/lib/apt/lists/*
 
 # Install basic tools
 RUN apt-get update \
