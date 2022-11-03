@@ -7,8 +7,14 @@ RUN echo "I am running on `$BUILDPLATFORM, building for `$TARGETPLATFORM"
 # Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
 ENV CHECKPOINT_DISABLE=1
 
+# Install apt dependencies
+RUN apt-get update \
+    && apt-get install -y apt-transport-https ca-certificates gnupg2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install packer
-RUN buildDeps="gnupg2 curl software-properties-common" \
+RUN buildDeps="curl gnupg2 software-properties-common" \
     && apt-get update \
     && apt-get install --no-install-recommends -y `$buildDeps \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
@@ -59,8 +65,12 @@ RUN apt-get update \
                 'xenial'
             }elseif ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '18.04') {
                 'bionic'
-            }else {
+            }elseif ($version -eq '6.1.26' -and $VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '20.04') {
                 'eoan'
+            }elseif ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '20.04') {
+                'focal'
+            }elseif ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '22.04') {
+                'jammy'
             }
         }
         @"

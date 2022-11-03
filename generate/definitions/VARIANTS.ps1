@@ -1,5 +1,4 @@
-
-# Docker image variants' definitions
+# See virtualbox versions: https://download.virtualbox.org/virtualbox
 $local:VARIANTS_MATRIX = @(
     @{
         package = 'packer'
@@ -8,7 +7,27 @@ $local:VARIANTS_MATRIX = @(
         distro_version = '20.04'
         subvariants = @(
             @{ components = @( 'sops' ); tag_as_latest = $true }
+            @{ components = @( 'sops', 'virtualbox-7.0.2' ) }
+            @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
             @{ components = @( 'sops', 'virtualbox-6.1.26' ) }
+        )
+    }
+    @{
+        package = 'packer'
+        package_version = '1.7.7'
+        distro = 'ubuntu'
+        distro_version = '18.04'
+        subvariants = @(
+            @{ components = @( 'sops', 'virtualbox-6.0.24' ) }
+        )
+    }
+    @{
+        package = 'packer'
+        package_version = '1.7.7'
+        distro = 'ubuntu'
+        distro_version = '16.04'
+        subvariants = @(
+            @{ components = @( 'sops', 'virtualbox-5.2.44' ) }
         )
     }
 )

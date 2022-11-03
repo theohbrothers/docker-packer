@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:16.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
@@ -46,9 +46,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     buildDeps="curl build-essential dkms" \
     && apt-get update \
     && apt-get install --no-install-recommends -y $buildDeps \
-    && curl -sSLO "https://download.virtualbox.org/virtualbox/6.1.26/SHA256SUMS" \
-    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~eoan_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
-    && PACKAGE="https://download.virtualbox.org/virtualbox/6.1.26/$FILE" \
+    && curl -sSLO "https://download.virtualbox.org/virtualbox/5.2.44/SHA256SUMS" \
+    && FILE="$( cat SHA256SUMS | grep 'Ubuntu~xenial_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )" \
+    && PACKAGE="https://download.virtualbox.org/virtualbox/5.2.44/$FILE" \
     && curl -sSLO "$PACKAGE" \
     && cat SHA256SUMS | grep "$FILE" | sha256sum -c \
     && apt-get install --no-install-recommends -y "./$FILE" \
