@@ -879,7 +879,7 @@ jobs:
 
   update-dockerhub-description:
     needs: [build-1-7-7-sops-ubuntu-20-04, build-1-7-7-sops-virtualbox-7-0-2-ubuntu-20-04, build-1-7-7-sops-virtualbox-6-1-40-ubuntu-20-04, build-1-7-7-sops-virtualbox-6-1-26-ubuntu-20-04, build-1-7-7-sops-virtualbox-6-0-24-ubuntu-18-04, build-1-7-7-sops-virtualbox-5-2-44-ubuntu-16-04]
-    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
