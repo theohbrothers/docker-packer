@@ -6,8 +6,9 @@ $local:VARIANTS_MATRIX = @(
         distro = 'ubuntu'
         distro_version = '20.04'
         subvariants = @(
-            @{ components = @( 'sops' ); tag_as_latest = $true }
+            @{ components = @( 'sops' ) }
             @{ components = @( 'sops', 'virtualbox-7.0.2' ) }
+            @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
             @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
             @{ components = @( 'sops', 'virtualbox-6.1.26' ) }
         )
@@ -51,11 +52,13 @@ $VARIANTS = @(
                         $variant['distro']
                         $variant['distro_version']
                 ) -join '-'
-                tag_as_latest = if ( $subVariant.Contains('tag_as_latest') ) {
-                                    $subVariant['tag_as_latest']
-                                } else {
-                                    $false
-                                }
+                tag_as_latest = if ($variant['package_version'] -eq $local:VARIANTS_MATRIX[0]['package_version'] -and
+                                    $variant['distro_version'] -eq $local:VARIANTS_MATRIX[0]['distro_version'] -and
+                                    ! ( Compare-Object $subVariant['components'] @('sops') )) {
+                                        $true
+                                    } else {
+                                        $false
+                                    }
             }
         }
     }
