@@ -29,26 +29,48 @@ $(
 
 "@
 
-@'
-
+@"
 ## Usage
 
+### QEMU builder
 
-```sh
+``````sh
+# Note: The GID of the group 'kvm' in the container must match the host's. If not, use --privileged instead of --device. See: https://stackoverflow.com/questions/48422001/how-to-launch-qemu-kvm-from-inside-a-docker-container
 docker run --rm -it \
-    -v $(pwd):/src \
+    --device /dev/kvm \
+    -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-ubuntu-20.04 sh -c 'packer --version && packer build .'
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bqemu\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && packer build template.json'
+``````
 
-# virtualbox
-# The host must have an exact matching virtualbox version, in this case, virtualbox 6.1.26
+See docker-compose examples:
+
+- [Ubuntu 20.04 VM image](docs/ubuntu2004-qemu)
+
+### Virtualbox builder
+
+``````sh
+# The host must have an exact matching virtualbox version
 docker run --rm -it \
-    -v /dev/vboxdrv:/dev/vboxdrv:ro \
-    -v $(pwd):/src \
+    --device /dev/vboxdrv \
+    -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04 sh -c 'packer --version && vboxmanage --version && packer build .'
-```
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bvirtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && vboxmanage --version && packer build template.json'
+``````
 
+### Other builder(s)
+
+``````sh
+docker run --rm -it \
+    -v `$(pwd):/src \
+    -w /src \
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -notmatch '\bqemu|virtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && packer build template.json'
+``````
+
+
+"@
+
+@'
 ## Development
 
 Requires Windows `powershell` or [`pwsh`](https://github.com/PowerShell/PowerShell).

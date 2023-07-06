@@ -7,6 +7,7 @@ $local:VARIANTS_MATRIX = @(
         distro_version = '20.04'
         subvariants = @(
             @{ components = @( 'sops' ) }
+            @{ components = @( 'sops', 'qemu' ) }
             @{ components = @( 'sops', 'virtualbox-7.0.8' ) }
             @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
             @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
@@ -19,6 +20,7 @@ $local:VARIANTS_MATRIX = @(
         distro = 'ubuntu'
         distro_version = '18.04'
         subvariants = @(
+            @{ components = @( 'sops', 'qemu' ) }
             @{ components = @( 'sops', 'virtualbox-6.0.24' ) }
         )
     }
