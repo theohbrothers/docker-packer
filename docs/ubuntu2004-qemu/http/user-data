@@ -1,0 +1,69 @@
+
+#cloud-config
+autoinstall:
+  version: 1
+  early-commands:
+    - systemctl stop ssh
+  locale: en_US.UTF-8
+  keyboard:
+      layout: us
+      variant: ""
+      toggle: null
+  identity:
+    hostname: ubuntu-server
+    # Verify the hash using command: echo ubuntu | openssl passwd -6 -salt wdAcoXrU039hKYPd -stdin
+    password: $6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1
+    username: ubuntu
+  user-data:
+    disable_root: false
+  network:
+    network:
+      version: 2
+      ethernets:
+        eth0:
+          dhcp4: true
+          dhcp-identifier: mac
+  # Single partition bootable disk using Curtin "actions" config: /dev/sda1 will be root partition with boot flag
+  storage:
+    # grub:
+    #   reorder_uefi: False
+    #   install_devices:
+    #     - /dev/vda1
+    swap:
+      size: 0
+    config:
+      - id: disk0
+        type: disk
+        path: /dev/vda
+        model: QEMU HARDDISK # This key is only used for documentation by curtin
+        name: ''
+        ptable: msdos # For grub to be installed on /dev/vda1, partition table should be msdos
+        wipe: superblock
+        grub_device: true
+      - id: disk0-part0
+        type: partition
+        number: 1
+        size: -1
+        flag: boot
+        device: disk0
+      - id: disk0-part0-fs0
+        type: format
+        fstype: ext4
+        label: cloud-image
+        volume: disk0-part0
+      - id: disk0-mount0
+        type: mount
+        path: /
+        device: disk0-part0-fs0
+  ssh:
+    install-server: true
+    authorized-keys: []
+    allow-pw: yes
+  # packages:
+  #   - sudo
+  #   - openssh-server
+  late-commands:
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT=="\1 net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub
+    - curtin in-target --target=/target -- update-grub
+    # Restore DHCP IP address
+    - sed -i 's/^#*\(send dhcp-client-identifier\).*$/\1 = hardware;/' /target/etc/dhcp/dhclient.conf

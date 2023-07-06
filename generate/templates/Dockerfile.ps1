@@ -65,6 +65,28 @@ RUN set -eux; \
 "@
     }
 
+    if ($_ -match 'qemu') {
+@"
+# Install kvm. See: https://help.ubuntu.com/community/KVM/Installation
+RUN set -eux; \
+    apt-get update; \
+    \
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections; \
+    apt-get install -y --no-install-recommends qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils; \
+    apt-get install -y ovmf; \
+    \
+    virt-host-validate || true; \
+    qemu-system-x86_64 --version; \
+    libvirtd --version; \
+    virsh --version; \
+    \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
+
+
+"@
+    }
+
     if ($_ -match 'virtualbox-([^-]+)') {
         $version = $matches[1]
         $codename = & {
@@ -80,7 +102,7 @@ RUN set -eux; \
                 'jammy'
             }
         }
-        @"
+@"
 # Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
 # Dynamically determine the package, using the SHA256SUMS file, because there is a 5 digit number suffix in the version that is unknown
 # E.g. https://download.virtualbox.org/virtualbox/6.1.22/virtualbox-6.1_6.1.22-144080~Ubuntu~eoan_amd64.deb
