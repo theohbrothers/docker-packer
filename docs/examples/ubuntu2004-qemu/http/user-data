@@ -23,7 +23,7 @@ autoinstall:
         eth0:
           dhcp4: true
           dhcp-identifier: mac
-  # Single partition bootable disk using Curtin "actions" config: /dev/sda1 will be root partition with boot flag
+  # Single partition bootable disk using Curtin "actions" config: /dev/vda1 will be root partition with boot flag
   storage:
     # grub:
     #   reorder_uefi: False

@@ -35,7 +35,7 @@ docker run --rm -it \
 
 See docker-compose examples:
 
-- [Ubuntu 20.04 VM image](docs/ubuntu2004-qemu)
+- [Ubuntu 20.04 VM image](docs/examples/ubuntu2004-qemu)
 
 ### Virtualbox builder
 
@@ -47,6 +47,10 @@ docker run --rm -it \
     -w /src \
     theohbrothers/docker-packer:1.7.7-sops-virtualbox-7.0.8-ubuntu-20.04 sh -c 'packer --version && vboxmanage --version && packer build template.json'
 ```
+
+See docker-compose examples:
+
+- [Ubuntu 20.04 VM .ova](docs/examples/ubuntu2004-virtualbox)
 
 ### Other builder(s)
 
