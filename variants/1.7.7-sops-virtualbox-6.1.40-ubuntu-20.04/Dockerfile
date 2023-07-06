@@ -22,6 +22,7 @@ RUN set -eux; \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"; \
     apt-get update; \
     apt-get install --no-install-recommends -y packer=1.7.7; \
+    packer version; \
     apt-get purge --auto-remove -y $buildDeps; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
