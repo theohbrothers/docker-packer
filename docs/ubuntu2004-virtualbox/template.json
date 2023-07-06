@@ -1,0 +1,61 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "name": "virtualbox-null-clean",
+      "vm_name": "ubuntu2004-virtualbox",
+      "iso_urls": [
+        "ubuntu-20.04.5-live-server-amd64.iso",
+        "https://old-releases.ubuntu.com/releases/20.04/ubuntu-20.04.5-live-server-amd64.iso"
+      ],
+      "iso_checksum": "sha256:5035be37a7e9abbdc09f0d257f3e33416c1a0fb322ba860d42d74aa75c3468d4",
+      "disk_size": "8192",
+      "hard_drive_interface": "sata",
+      "format": "ova",
+      "output_directory": "build",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "1024"],
+        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+      ],
+      "headless": "true",
+      "guest_additions_mode": "disable",
+      "guest_os_type": "Ubuntu_64",
+      "http_directory": "http",
+      "vrdp_bind_address": "0.0.0.0",
+      "vrdp_port_min": "5901",
+      "vrdp_port_max": "5901",
+      "communicator": "ssh",
+      "ssh_username": "ubuntu",
+      "ssh_password": "ubuntu",
+      "ssh_timeout": "1h",
+      "ssh_handshake_attempts": "99999",
+      "boot_wait": "1s",
+      "boot_keygroup_interval": "1s",
+      "boot_command": [
+        "<tab><wait><tab><wait><tab><wait><tab><wait>",
+        "<tab><wait><tab><wait><tab><wait><tab><wait>",
+        "<tab><wait><tab><wait><tab><wait><tab><wait>",
+        "<esc><f6><esc>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "/casper/vmlinuz autoinstall quiet net.ifnames=0 biosdevname=0 ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+        "initrd=/casper/initrd ",
+        " --- <enter>"
+      ],
+      "shutdown_timeout": "5m",
+      "shutdown_command": "echo 'ubuntu' | sudo -S -E shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sync"]
+    }
+  ]
+}
