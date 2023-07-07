@@ -9,7 +9,7 @@ docker run --rm -it \
     -v $(pwd):/src \
     -w /src \
     -p 127.0.0.1:5901:5901 \
-    theohbrothers/docker-packer:master-efee68d-1.7.7-sops-virtualbox-6.1.44-ubuntu-20.04 packer build template.json
+    theohbrothers/docker-packer:1.7.7-sops-virtualbox-6.1.44-ubuntu-20.04 packer build template.json
 
 # 2. During the build, to connect to the VM's console from the host via RDP at rdp://127.0.0.1:5901
 
