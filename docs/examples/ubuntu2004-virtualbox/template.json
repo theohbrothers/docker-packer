@@ -15,7 +15,7 @@
       "output_directory": "build",
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--memory", "1024"],
-        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+        ["modifyvm", "{{.Name}}", "--cpus", "2"]
       ],
       "headless": "true",
       "guest_additions_mode": "disable",
