@@ -32,6 +32,8 @@ $(
 @"
 ## Usage
 
+Packer [configuration](https://developer.hashicorp.com/packer/docs/configure#configuring-packer) can be done via ``.packerconfig`` config file or environment variables (e.g. ``PACKER_LOG=1`` for verbose logging). Environment variables are preferred when using docker.
+
 ### QEMU builder
 
 ``````sh
@@ -77,7 +79,7 @@ See examples:
 docker run --rm -it \
     -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -notmatch '\bqemu|virtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && packer build template.json'
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -notmatch '\bqemu|virtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) packer build template.json'
 ``````
 
 
