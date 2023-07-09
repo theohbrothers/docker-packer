@@ -40,7 +40,8 @@ See docker-compose examples:
 ### Virtualbox builder
 
 ```sh
-# The host must have an exact matching virtualbox version
+# Note: The host may need to have an exact matching virtualbox version, or at least the same virtualbox minor version,
+# if not virtualbox may not be able to start VMs
 docker run --rm -it \
     --device /dev/vboxdrv \
     -v $(pwd):/src \
