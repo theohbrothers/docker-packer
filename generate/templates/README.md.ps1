@@ -40,28 +40,36 @@ docker run --rm -it \
     --device /dev/kvm \
     -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bqemu\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && packer build template.json'
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bqemu\b' } | Select-Object -First 1 | % { $_['tag'] } ) packer build template.json
 ``````
 
-See docker-compose examples:
+See examples:
 
-- [Ubuntu 20.04 VM image](docs/examples/ubuntu2004-qemu)
+- [Ubuntu 20.04 VM ``.qcow2`` image](docs/examples/ubuntu2004-qemu)
 
 ### Virtualbox builder
 
+The host may need to have an exact matching virtualbox version, or at least the same virtualbox minor version, if not virtualbox may not be able to start VMs. To verify virtualbox can start VMs, run the following, ensuring there is no error message:
+
 ``````sh
-# Note: The host may need to have an exact matching virtualbox version, or at least the same virtualbox minor version,
-# if not virtualbox may not be able to start VMs
+docker run --rm -it \
+    --device /dev/vboxdrv \
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bvirtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) vboxmanage --version
+``````
+
+If all is well, to build a VM image:
+
+``````sh
 docker run --rm -it \
     --device /dev/vboxdrv \
     -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bvirtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) sh -c 'packer --version && vboxmanage --version && packer build template.json'
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -match '\bvirtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) packer build template.json
 ``````
 
-See docker-compose examples:
+See examples:
 
-- [Ubuntu 20.04 VM .ova](docs/examples/ubuntu2004-virtualbox)
+- [Ubuntu 20.04 VM ``.ova``](docs/examples/ubuntu2004-virtualbox)
 
 ### Other builder(s)
 
