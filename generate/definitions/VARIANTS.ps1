@@ -1,37 +1,41 @@
+$local:VERSIONS = @( Get-Content $PSScriptRoot/versions.json -Encoding utf8 -raw | ConvertFrom-Json )
+
 # See virtualbox versions: https://download.virtualbox.org/virtualbox
 $local:VARIANTS_MATRIX = @(
-    @{
-        package = 'packer'
-        package_version = '1.7.7'
-        distro = 'ubuntu'
-        distro_version = '20.04'
-        subvariants = @(
-            @{ components = @( 'sops' ) }
-            @{ components = @( 'sops', 'qemu' ) }
-            @{ components = @( 'sops', 'virtualbox-7.0.8' ) }
-            @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
-            @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
-            @{ components = @( 'sops', 'virtualbox-6.1.26' ) }
-        )
-    }
-    @{
-        package = 'packer'
-        package_version = '1.7.7'
-        distro = 'ubuntu'
-        distro_version = '18.04'
-        subvariants = @(
-            @{ components = @( 'sops', 'qemu' ) }
-            @{ components = @( 'sops', 'virtualbox-6.0.24' ) }
-        )
-    }
-    @{
-        package = 'packer'
-        package_version = '1.7.7'
-        distro = 'ubuntu'
-        distro_version = '16.04'
-        subvariants = @(
-            @{ components = @( 'sops', 'virtualbox-5.2.44' ) }
-        )
+    foreach ($v in $local:VERSIONS.packer.versions) {
+        @{
+            package = 'packer'
+            package_version = $v
+            distro = 'ubuntu'
+            distro_version = '20.04'
+            subvariants = @(
+                @{ components = @( 'sops' ) }
+                @{ components = @( 'sops', 'qemu' ) }
+                @{ components = @( 'sops', 'virtualbox-7.0.8' ) }
+                @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
+                @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
+                @{ components = @( 'sops', 'virtualbox-6.1.26' ) }
+            )
+        }
+        @{
+            package = 'packer'
+            package_version = $v
+            distro = 'ubuntu'
+            distro_version = '18.04'
+            subvariants = @(
+                @{ components = @( 'sops', 'qemu' ) }
+                @{ components = @( 'sops', 'virtualbox-6.0.24' ) }
+            )
+        }
+        @{
+            package = 'packer'
+            package_version = $v
+            distro = 'ubuntu'
+            distro_version = '16.04'
+            subvariants = @(
+                @{ components = @( 'sops', 'virtualbox-5.2.44' ) }
+            )
+        }
     }
 )
 
