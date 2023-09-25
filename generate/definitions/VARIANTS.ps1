@@ -50,6 +50,7 @@ $VARIANTS = @(
                     distro_version = $variant['distro_version']
                     platforms = 'linux/amd64'
                     components = $subVariant['components']
+                    job_group_key = "$( $variant['package_version'] )-$( $variant['distro'] )-$( $variant['distro_version'] )"
                 }
                 # Docker image tag. E.g. '1.7.7-virtualbox-ubuntu-18.04'
                 tag = @(
