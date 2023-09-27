@@ -79,7 +79,7 @@ See examples:
 docker run --rm -it \
     -v `$(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -notmatch '\bqemu|virtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) packer build template.json'
+    theohbrothers/docker-packer:$( $VARIANTS | ? { $_['tag'] -notmatch '\bqemu|virtualbox\b' } | Select-Object -First 1 | % { $_['tag'] } ) packer build template.json
 ``````
 
 
