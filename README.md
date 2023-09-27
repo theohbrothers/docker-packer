@@ -69,7 +69,7 @@ See examples:
 docker run --rm -it \
     -v $(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-ubuntu-20.04 packer build template.json'
+    theohbrothers/docker-packer:1.7.7-sops-ubuntu-20.04 packer build template.json
 ```
 
 ## Development
