@@ -11,6 +11,7 @@ $local:VARIANTS_MATRIX = @(
             subvariants = @(
                 @{ components = @( 'sops' ) }
                 @{ components = @( 'sops', 'qemu' ) }
+                @{ components = @( 'sops', 'virtualbox-7.0.20' ) }
                 @{ components = @( 'sops', 'virtualbox-7.0.8' ) }
                 @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
                 @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
