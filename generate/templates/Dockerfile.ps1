@@ -20,7 +20,12 @@ RUN set -eux; \
     apt-get update; \
     apt-get install --no-install-recommends -y `$buildDeps; \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -; \
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com `$(lsb_release -cs) main"; \
+    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(
+        if ($VARIANT['_metadata']['distro_version'] -eq '16.04' -or $VARIANT['_metadata']['distro_version'] -eq '18.04') {
+            'focal'
+        } else {
+            '$(lsb_release -cs)'
+        }) main"; \
     apt-get update; \
     apt-get install --no-install-recommends -y packer=$( $VARIANT['_metadata']['package_version'] ); \
     packer version; \
