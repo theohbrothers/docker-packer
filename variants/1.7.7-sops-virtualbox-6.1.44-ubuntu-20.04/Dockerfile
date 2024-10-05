@@ -21,7 +21,7 @@ RUN set -eux; \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -; \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"; \
     apt-get update; \
-    apt-get install --no-install-recommends -y packer=1.7.7; \
+    apt-get install --no-install-recommends -y packer=1.7.7 || apt-get install --no-install-recommends -y packer='1.7.7-*'; \
     packer version; \
     apt-get purge --auto-remove -y $buildDeps; \
     apt-get clean; \

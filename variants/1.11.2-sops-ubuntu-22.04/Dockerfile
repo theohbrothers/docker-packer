@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
@@ -21,11 +21,15 @@ RUN set -eux; \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -; \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"; \
     apt-get update; \
-    apt-get install --no-install-recommends -y packer=1.7.7 || apt-get install --no-install-recommends -y packer='1.7.7-*'; \
+    apt-get install --no-install-recommends -y packer=1.11.2 || apt-get install --no-install-recommends -y packer='1.11.2-*'; \
     packer version; \
     apt-get purge --auto-remove -y $buildDeps; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
+
+# Since packer 1.8, plugins must installed separately
+# Define the packer plugin directory common to all users
+ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
 # Install sops
 RUN set -eux; \
@@ -46,34 +50,6 @@ RUN set -eux; \
     apt-get install --no-install-recommends -y gnupg2; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
-
-# Virtualbox: https://www.virtualbox.org/wiki/Linux_Downloads
-# Dynamically determine the package, using the SHA256SUMS file, because there is a 5 digit number suffix in the version that is unknown
-# E.g. https://download.virtualbox.org/virtualbox/6.1.22/virtualbox-6.1_6.1.22-144080~Ubuntu~eoan_amd64.deb
-RUN set -eux; \
-    export DEBIAN_FRONTEND=noninteractive \
-    buildDeps="curl build-essential dkms"; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y $buildDeps; \
-    curl -sSLO "https://download.virtualbox.org/virtualbox/6.1.40/SHA256SUMS"; \
-    FILE="$( cat SHA256SUMS | grep 'Ubuntu~focal_amd64.deb' | awk '{print $2}' | cut -d '*' -f2 )"; \
-    PACKAGE="https://download.virtualbox.org/virtualbox/6.1.40/$FILE"; \
-    curl -sSLO "$PACKAGE"; \
-    cat SHA256SUMS | grep "$FILE" | sha256sum -c; \
-    apt-get install --no-install-recommends -y "./$FILE"; \
-    vboxmanage --version; \
-    rm -f "$FILE"; \
-    apt-get purge --auto-remove -y $buildDeps; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
-
-# Virtualbox extension pack: https://www.virtualbox.org/wiki/Downloads
-# E.g. https://download.virtualbox.org/virtualbox/6.1.22/Oracle_VM_VirtualBox_Extension_Pack-6.1.22.vbox-extpack
-# Not GPL, must accept terms. See: https://www.virtualbox.org/wiki/Licensing_FAQ
-# RUN apt-get update \
-# && apt-get install --no-install-recommends -y virtualbox-ext-pack \
-# && apt-get clean \
-# && rm -rf /var/lib/apt/lists/*
 
 # Install basic tools
 RUN set -eux; \
