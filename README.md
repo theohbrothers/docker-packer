@@ -10,7 +10,11 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 
 | Tag | Dockerfile Build Context |
 |:-------:|:---------:|
-| `:1.7.7-sops-ubuntu-20.04`, `:latest` | [View](variants/1.7.7-sops-ubuntu-20.04) |
+| `:1.11.2-sops-ubuntu-22.04`, `:latest` | [View](variants/1.11.2-sops-ubuntu-22.04) |
+| `:1.11.2-sops-qemu-ubuntu-22.04` | [View](variants/1.11.2-sops-qemu-ubuntu-22.04) |
+| `:1.11.2-sops-virtualbox-7.0.20-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.0.20-ubuntu-22.04) |
+| `:1.11.2-sops-virtualbox-7.1.2-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.1.2-ubuntu-22.04) |
+| `:1.7.7-sops-ubuntu-20.04` | [View](variants/1.7.7-sops-ubuntu-20.04) |
 | `:1.7.7-sops-qemu-ubuntu-20.04` | [View](variants/1.7.7-sops-qemu-ubuntu-20.04) |
 | `:1.7.7-sops-virtualbox-7.0.20-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-7.0.20-ubuntu-20.04) |
 | `:1.7.7-sops-virtualbox-7.0.8-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-7.0.8-ubuntu-20.04) |
@@ -33,7 +37,7 @@ docker run --rm -it \
     --device /dev/kvm \
     -v $(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-qemu-ubuntu-20.04 packer build template.json
+    theohbrothers/docker-packer:1.11.2-sops-qemu-ubuntu-22.04 packer build template.json
 ```
 
 See examples:
@@ -47,7 +51,7 @@ The host may need to have an exact matching virtualbox version, or at least the 
 ```sh
 docker run --rm -it \
     --device /dev/vboxdrv \
-    theohbrothers/docker-packer:1.7.7-sops-virtualbox-7.0.20-ubuntu-20.04 vboxmanage --version
+    theohbrothers/docker-packer:1.11.2-sops-virtualbox-7.0.20-ubuntu-22.04 vboxmanage --version
 ```
 
 If all is well, to build a VM image:
@@ -57,7 +61,7 @@ docker run --rm -it \
     --device /dev/vboxdrv \
     -v $(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-virtualbox-7.0.20-ubuntu-20.04 packer build template.json
+    theohbrothers/docker-packer:1.11.2-sops-virtualbox-7.0.20-ubuntu-22.04 packer build template.json
 ```
 
 See examples:
@@ -70,7 +74,7 @@ See examples:
 docker run --rm -it \
     -v $(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.7.7-sops-ubuntu-20.04 packer build template.json
+    theohbrothers/docker-packer:1.11.2-sops-ubuntu-22.04 packer build template.json
 ```
 
 ## Development

@@ -27,7 +27,7 @@ RUN set -eux; \
             '$(lsb_release -cs)'
         }) main"; \
     apt-get update; \
-    apt-get install --no-install-recommends -y packer=$( $VARIANT['_metadata']['package_version'] ); \
+    apt-get install --no-install-recommends -y packer=$( $VARIANT['_metadata']['package_version'] ) || apt-get install --no-install-recommends -y packer='$( $VARIANT['_metadata']['package_version'] )-*'; \
     packer version; \
     apt-get purge --auto-remove -y `$buildDeps; \
     apt-get clean; \
@@ -35,6 +35,37 @@ RUN set -eux; \
 
 
 "@
+
+if ([version]$VARIANT['_metadata']['package_version'] -ge [version]'1.8') {
+@"
+# Since packer 1.8, plugins must installed separately
+# Define the packer plugin directory common to all users
+ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
+
+
+"@
+
+    $VARIANT['_metadata']['components'] | % {
+        if ($_ -eq 'virtualbox') {
+@"
+RUN set -eux; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.1; \
+    packer plugins installed | grep virtualbox;
+
+
+"@
+        }
+        if ($_ -eq 'qemu') {
+@"
+RUN set -eux; \
+    packer plugins install github.com/hashicorp/qemu v1.1.0; \
+    packer plugins installed | grep qemu;
+
+
+"@
+        }
+    }
+}
 
 $VARIANT['_metadata']['components'] | % {
     if ($_ -eq 'sops') {
