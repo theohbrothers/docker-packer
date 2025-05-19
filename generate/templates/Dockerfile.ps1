@@ -45,17 +45,17 @@ ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
 "@
 
-    $VARIANT['_metadata']['components'] | % {
-        if ($_ -eq 'virtualbox') {
+    if ( $VARIANT['_metadata']['components'] -match 'virtualbox-([^-]+)' ) {
 @"
 RUN set -eux; \
-    packer plugins install github.com/hashicorp/virtualbox v1.1.1; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.2; \
     packer plugins installed | grep virtualbox;
 
 
 "@
-        }
-        if ($_ -eq 'qemu') {
+    }
+
+    if ( $VARIANT['_metadata']['components'] -contains 'qemu' ) {
 @"
 RUN set -eux; \
     packer plugins install github.com/hashicorp/qemu v1.1.0; \
@@ -63,12 +63,10 @@ RUN set -eux; \
 
 
 "@
-        }
     }
 }
 
-$VARIANT['_metadata']['components'] | % {
-    if ($_ -eq 'sops') {
+if ( $VARIANT['_metadata']['components'] -contains 'sops' ) {
         if ( $VARIANT['_metadata']['distro'] -eq 'alpine' -and $VARIANT['_metadata']['distro_version'] -eq '3.6' ) {
             @"
 # Fix wget not working in alpine:3.6. https://github.com/gliderlabs/docker-alpine/issues/423
@@ -100,9 +98,9 @@ RUN set -eux; \
 
 
 "@
-    }
+}
 
-    if ($_ -match 'qemu') {
+if ( $VARIANT['_metadata']['components'] -contains 'qemu' ) {
 @"
 # Install kvm. See: https://help.ubuntu.com/community/KVM/Installation
 RUN set -eux; \
@@ -122,9 +120,10 @@ RUN set -eux; \
 
 
 "@
-    }
+}
 
-    if ($_ -match 'virtualbox-([^-]+)') {
+$VARIANT['_metadata']['components'] | % {
+    if ($_ -match 'virtualbox-([^-]+)' ) {
         $version = $matches[1]
         $codename = & {
             if ($VARIANT['_metadata']['distro'] -eq 'ubuntu' -and $VARIANT['_metadata']['distro_version'] -eq '16.04') {
