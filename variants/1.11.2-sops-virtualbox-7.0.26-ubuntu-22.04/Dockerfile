@@ -31,6 +31,10 @@ RUN set -eux; \
 # Define the packer plugin directory common to all users
 ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
+RUN set -eux; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.2; \
+    packer plugins installed | grep virtualbox;
+
 # Install sops
 RUN set -eux; \
     buildDeps="wget"; \
