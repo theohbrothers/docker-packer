@@ -32,7 +32,7 @@ RUN set -eux; \
 ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
 RUN set -eux; \
-    packer plugins install github.com/hashicorp/qemu v1.1.0; \
+    packer plugins install github.com/hashicorp/qemu v1.1.2; \
     packer plugins installed | grep qemu;
 
 # Install sops
