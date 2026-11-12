@@ -3,31 +3,69 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 
-# Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
-ENV CHECKPOINT_DISABLE=1
-
-# Install apt dependencies
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y apt-transport-https ca-certificates gnupg2; \
+    apt-get install -y ca-certificates gnupg2; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
+
+# Install provision tools
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y wget unzip; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
 
 # Install packer
 RUN set -eux; \
-    buildDeps="curl gnupg2 software-properties-common"; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y $buildDeps; \
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -; \
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y packer=1.11.2 || apt-get install --no-install-recommends -y packer='1.11.2-*'; \
-    packer version; \
-    apt-get purge --auto-remove -y $buildDeps; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
+    PACKER_VERSION=1.11.2; \
+    case "$( uname -m )" in \
+        'x86') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_386.zip"; \
+            SHA256=fe5781307673843309be41ceac6541d4322640653f6b6e6eabd85375f9d70726; \
+            ;; \
+        'x86_64') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_amd64.zip"; \
+            SHA256=ced13efc257d0255932d14b8ae8f38863265133739a007c430cae106afcfc45a; \
+            ;; \
+        'armhf') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_arm.zip"; \
+            SHA256=2f6e1928204b61f171b9d79cbc697a5b35c65cd435e1a38bb648bb7e96dba284; \
+            ;; \
+        'armv7l') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_arm.zip"; \
+            SHA256=2f6e1928204b61f171b9d79cbc697a5b35c65cd435e1a38bb648bb7e96dba284; \
+            ;; \
+        'aarch64') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_arm64.zip"; \
+            SHA256=dd296d743dd4593304307583cff5290bba9b868fc2b0b605b64566f8141ca728; \
+            ;; \
+        'ppc64le') \
+            URL="https://releases.hashicorp.com/packer/1.11.2/packer_1.11.2_linux_ppc64le.zip"; \
+            SHA256=ce00800a2b16bd964734b52714fe93d68889bb29acfddbe2f0fb68b2efe8b2b2; \
+            ;; \
+        *) \
+            echo "Architecture not supported"; \
+            exit 1; \
+            ;; \
+    esac; \
+    FILE=packer.zip; \
+    wget -q "$URL" -O "$FILE"; \
+    echo "$SHA256  $FILE" | sha256sum -c -; \
+    unzip "$FILE" -d extract; \
+    mkdir -pv /usr/local/bin; \
+    BIN=$( find extract -type f -name "packer" | head -n1 ); \
+    mv -v "$BIN" /usr/local/bin/packer; \
+    chmod +x /usr/local/bin/packer; \
+    CHECKPOINT_DISABLE=1 packer version; \
+    rm -rf extract; \
+    rm -f "$FILE"; \
+    :
 
-# Since packer 1.8, plugins must installed separately
+# Disable packer checkpoints. See: https://www.packer.io/docs/configure#full-list-of-environment-variables-usable-for-packer
+ENV CHECKPOINT_DISABLE=1
+
+# Since packer >= 1.8, plugins must installed separately
 # Define the packer plugin directory common to all users
 ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
@@ -120,6 +158,7 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     \
-    wget -qO- https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc; \
+    wget -qO- https://github.com/minio/mc/releases/download/RELEASE.2021-10-07T04-19-58Z/mc.linux-amd64.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc; \
     chmod +x /usr/local/bin/mc; \
-    sha256sum /usr/local/bin/mc | grep '^aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93 '
+    sha256sum /usr/local/bin/mc | grep '^aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93 '; \
+    mc --version
