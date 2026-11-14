@@ -164,3 +164,46 @@ RUN set -eux; \
     chmod +x /usr/local/bin/mc; \
     sha256sum /usr/local/bin/mc | grep '^aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93 '; \
     mc --version
+
+# Install rclone
+RUN set -eux; \
+    RCLONE_VERSION=1.76.0; \
+    case "$( uname -m )" in \
+        'x86') \
+            URL="https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-386.zip"; \
+            SHA256=ac5a696aff30c2806475d7c9ae6bbb4eeda47067e5add32448bf33db54552a09; \
+            ;; \
+        'x86_64') \
+            URL="https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-amd64.zip"; \
+            SHA256=b00f00b3266c3764413afe599d3ec316f6f43b3e0ea8a0bc1d186d2133e46df7; \
+            ;; \
+        'armhf') \
+            URL="https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-arm-v6.zip"; \
+            SHA256=bcca617da41b3be618cc6af89680574d73d746a65a896975bc75e0622683c275; \
+            ;; \
+        'armv7l') \
+            URL="https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-arm-v7.zip"; \
+            SHA256=090e1e2ce0f2a27c6c5ad5b2a2f7bbf7570933f3523e8bf83cb25ee50115f885; \
+            ;; \
+        'aarch64') \
+            URL="https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-arm64.zip"; \
+            SHA256=ee169016675e23a69d77240565133ff7dbc9b33d16fa8f7053d4af39f1eaeb78; \
+            ;; \
+        *) \
+            echo "Architecture not supported"; \
+            exit 1; \
+            ;; \
+    esac; \
+    FILE=rclone.zip; \
+    wget -q "$URL" -O "$FILE"; \
+    echo "$SHA256  $FILE" | sha256sum -c -; \
+    unzip "$FILE" -d extract; \
+    mkdir -pv /usr/local/bin; \
+    BIN=$( find extract -type f -name "rclone" | head -n1 ); \
+    mv -v "$BIN" /usr/local/bin/rclone; \
+    chmod +x /usr/local/bin/rclone; \
+    rclone version; \
+    rm -rf extract; \
+    rm -f "$FILE"; \
+    :
+
