@@ -70,7 +70,7 @@ ENV CHECKPOINT_DISABLE=1
 ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
 RUN set -eux; \
-    packer plugins install github.com/hashicorp/virtualbox v1.1.2; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.5; \
     packer plugins installed | grep virtualbox;
 
 # Install sops

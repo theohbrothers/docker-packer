@@ -49,7 +49,7 @@ ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
     if ( $VARIANT['_metadata']['components'] -match 'virtualbox-([^-]+)' ) {
 @"
 RUN set -eux; \
-    packer plugins install github.com/hashicorp/virtualbox v1.1.2; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.5; \
     packer plugins installed | grep virtualbox;
 
 
@@ -59,7 +59,7 @@ RUN set -eux; \
     if ( $VARIANT['_metadata']['components'] -contains 'qemu' ) {
 @"
 RUN set -eux; \
-    packer plugins install github.com/hashicorp/qemu v1.1.2; \
+    packer plugins install github.com/hashicorp/qemu v1.1.8; \
     packer plugins installed | grep qemu;
 
 
