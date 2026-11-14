@@ -3,7 +3,7 @@ $local:VERSIONS = @( Get-Content $PSScriptRoot/versions.json -Encoding utf8 -raw
 # See virtualbox versions: https://download.virtualbox.org/virtualbox
 $local:VARIANTS_MATRIX = @(
     foreach ($v in $local:VERSIONS.packer.versions) {
-        if ([version]$v -ge [version]'1.8') {
+        if ([version]$v -eq [version]'1.11.2') {
             @{
                 package = 'packer'
                 package_version = $v
@@ -26,7 +26,7 @@ $local:VARIANTS_MATRIX = @(
                 )
             }
         }
-        if ([version]$v -lt [version]'1.8') {
+        if ([version]$v -eq [version]'1.7.7') {
             @{
                 package = 'packer'
                 package_version = $v
@@ -35,10 +35,7 @@ $local:VARIANTS_MATRIX = @(
                 subvariants = @(
                     @{ components = @( 'sops' ) }
                     @{ components = @( 'sops', 'qemu' ) }
-                    @{ components = @( 'sops', 'virtualbox-7.0.26' ) }
-                    @{ components = @( 'sops', 'virtualbox-6.1.44' ) }
-                    @{ components = @( 'sops', 'virtualbox-6.1.40' ) }
-                    @{ components = @( 'sops', 'virtualbox-6.1.26' ) }
+                    @{ components = @( 'sops', 'virtualbox-6.1.50' ) }
                 )
             }
             @{

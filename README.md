@@ -17,10 +17,7 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 | `:1.11.2-sops-virtualbox-7.1.18-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.1.18-ubuntu-22.04) |
 | `:1.7.7-sops-ubuntu-20.04` | [View](variants/1.7.7-sops-ubuntu-20.04) |
 | `:1.7.7-sops-qemu-ubuntu-20.04` | [View](variants/1.7.7-sops-qemu-ubuntu-20.04) |
-| `:1.7.7-sops-virtualbox-7.0.26-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-7.0.26-ubuntu-20.04) |
-| `:1.7.7-sops-virtualbox-6.1.44-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.44-ubuntu-20.04) |
-| `:1.7.7-sops-virtualbox-6.1.40-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.40-ubuntu-20.04) |
-| `:1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.26-ubuntu-20.04) |
+| `:1.7.7-sops-virtualbox-6.1.50-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-6.1.50-ubuntu-20.04) |
 | `:1.7.7-sops-qemu-ubuntu-18.04` | [View](variants/1.7.7-sops-qemu-ubuntu-18.04) |
 | `:1.7.7-sops-virtualbox-6.0.24-ubuntu-18.04` | [View](variants/1.7.7-sops-virtualbox-6.0.24-ubuntu-18.04) |
 | `:1.7.7-sops-virtualbox-5.2.44-ubuntu-16.04` | [View](variants/1.7.7-sops-virtualbox-5.2.44-ubuntu-16.04) |
