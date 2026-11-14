@@ -13,7 +13,7 @@ $local:VARIANTS_MATRIX = @(
                     @{ components = @( 'sops' ) }
                     @{ components = @( 'sops', 'qemu' ) }
                     @{ components = @( 'sops', 'virtualbox-7.0.26' ) }
-                    @{ components = @( 'sops', 'virtualbox-7.1.2' ) }
+                    @{ components = @( 'sops', 'virtualbox-7.1.18' ) }
                 )
             }
         }
