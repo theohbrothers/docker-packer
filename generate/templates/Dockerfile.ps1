@@ -205,4 +205,16 @@ RUN set -eux; \
     sha256sum /usr/local/bin/mc | grep '^aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93 '; \
     mc --version
 
+
 "@
+
+$RCLONE_VERSION = '1.76.0'
+Generate-DownloadBinary @{
+    binary = 'rclone'
+    version = $RCLONE_VERSION
+    checksumsUrl = "https://github.com/rclone/rclone/releases/download/v$RCLONE_VERSION/SHA256SUMS"
+    archiveformat = '.zip'
+    # platforms = $VARIANT['_metadata']['platforms']
+    destination = '/usr/local/bin/rclone'
+    testCommand = 'rclone version'
+}
