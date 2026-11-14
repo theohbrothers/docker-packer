@@ -8,6 +8,15 @@ $local:VARIANTS_MATRIX = @(
                 package = 'packer'
                 package_version = $v
                 distro = 'ubuntu'
+                distro_version = '24.04'
+                subvariants = @(
+                    @{ components = @( 'sops', 'qemu' ) }
+                )
+            }
+            @{
+                package = 'packer'
+                package_version = $v
+                distro = 'ubuntu'
                 distro_version = '22.04'
                 subvariants = @(
                     @{ components = @( 'sops' ) }
@@ -76,12 +85,11 @@ $VARIANTS = @(
                         $variant['distro_version']
                 ) -join '-'
                 tag_as_latest = if ($variant['package_version'] -eq $local:VARIANTS_MATRIX[0]['package_version'] -and
-                                    $variant['distro_version'] -eq $local:VARIANTS_MATRIX[0]['distro_version'] -and
-                                    ! ( Compare-Object $subVariant['components'] @('sops') )) {
-                                        $true
-                                    } else {
-                                        $false
-                                    }
+                                    $variant['distro_version'] -eq $local:VARIANTS_MATRIX[0]['distro_version']) {
+                                    $true
+                                } else {
+                                    $false
+                                }
             }
         }
     }
