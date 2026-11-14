@@ -13,7 +13,7 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 | `:1.11.2-sops-ubuntu-22.04`, `:latest` | [View](variants/1.11.2-sops-ubuntu-22.04) |
 | `:1.11.2-sops-qemu-ubuntu-22.04` | [View](variants/1.11.2-sops-qemu-ubuntu-22.04) |
 | `:1.11.2-sops-virtualbox-7.0.26-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.0.26-ubuntu-22.04) |
-| `:1.11.2-sops-virtualbox-7.1.2-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.1.2-ubuntu-22.04) |
+| `:1.11.2-sops-virtualbox-7.1.18-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.1.18-ubuntu-22.04) |
 | `:1.7.7-sops-ubuntu-20.04` | [View](variants/1.7.7-sops-ubuntu-20.04) |
 | `:1.7.7-sops-qemu-ubuntu-20.04` | [View](variants/1.7.7-sops-qemu-ubuntu-20.04) |
 | `:1.7.7-sops-virtualbox-7.0.26-ubuntu-20.04` | [View](variants/1.7.7-sops-virtualbox-7.0.26-ubuntu-20.04) |
