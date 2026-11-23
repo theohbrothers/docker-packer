@@ -10,7 +10,8 @@ Dockerized [`packer`](https://github.com/hashicorp/packer) with useful tools.
 
 | Tag | Dockerfile Build Context |
 |:-------:|:---------:|
-| `:1.11.2-sops-qemu-ubuntu-24.04`, `:latest` | [View](variants/1.11.2-sops-qemu-ubuntu-24.04) |
+| `:1.16.2-sops-qemu-ubuntu-24.04`, `:latest` | [View](variants/1.16.2-sops-qemu-ubuntu-24.04) |
+| `:1.11.2-sops-qemu-ubuntu-24.04` | [View](variants/1.11.2-sops-qemu-ubuntu-24.04) |
 | `:1.11.2-sops-ubuntu-22.04` | [View](variants/1.11.2-sops-ubuntu-22.04) |
 | `:1.11.2-sops-qemu-ubuntu-22.04` | [View](variants/1.11.2-sops-qemu-ubuntu-22.04) |
 | `:1.11.2-sops-virtualbox-7.0.26-ubuntu-22.04` | [View](variants/1.11.2-sops-virtualbox-7.0.26-ubuntu-22.04) |
@@ -34,7 +35,7 @@ docker run --rm -it \
     --device /dev/kvm \
     -v $(pwd):/src \
     -w /src \
-    theohbrothers/docker-packer:1.11.2-sops-qemu-ubuntu-24.04 packer build template.json
+    theohbrothers/docker-packer:1.16.2-sops-qemu-ubuntu-24.04 packer build template.json
 ```
 
 See examples:
