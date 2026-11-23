@@ -48,9 +48,12 @@ ENV PACKER_PLUGIN_PATH=/usr/share/packer/plugins
 
     if ( $VARIANT['_metadata']['components'] -match 'virtualbox-([^-]+)' ) {
 @"
-RUN set -eux; \
-    packer plugins install github.com/hashicorp/virtualbox v1.1.2; \
-    packer plugins installed | grep virtualbox;
+# Since packer 1.14.0, plugins are downloaded directly from releases.hashicorp.com. See: https://discuss.hashicorp.com/t/important-update-official-packer-plugin-distribution-moving-to-releases-hashicorp-com/75972
+# Here we mount the packer binary from another image, and use it to install plugins
+RUN --mount=type=bind,from=hashicorp/packer:latest,source=/bin/packer,target=/usr/local/bin/packer \
+    set -eux; \
+    packer plugins install github.com/hashicorp/virtualbox v1.1.6; \
+    packer plugins installed | grep packer-plugin-virtualbox;
 
 
 "@
@@ -58,9 +61,12 @@ RUN set -eux; \
 
     if ( $VARIANT['_metadata']['components'] -contains 'qemu' ) {
 @"
-RUN set -eux; \
-    packer plugins install github.com/hashicorp/qemu v1.1.2; \
-    packer plugins installed | grep qemu;
+# Since packer 1.14.0, plugins are downloaded directly from releases.hashicorp.com. See: https://discuss.hashicorp.com/t/important-update-official-packer-plugin-distribution-moving-to-releases-hashicorp-com/75972
+# Here we mount the packer binary from another image, and use it to install plugins
+RUN --mount=type=bind,from=hashicorp/packer:latest,source=/bin/packer,target=/usr/local/bin/packer \
+    set -eux; \
+    packer plugins install github.com/hashicorp/qemu v1.1.8; \
+    packer plugins installed | grep packer-plugin-qemu;
 
 
 "@
