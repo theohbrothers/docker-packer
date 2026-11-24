@@ -163,9 +163,10 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     \
-    wget -qO- https://github.com/minio/mc/releases/download/RELEASE.2021-10-07T04-19-58Z/mc.linux-amd64.RELEASE.2021-10-07T04-19-58Z > /usr/local/bin/mc; \
+    wget -qO- https://github.com/minio/mc/releases/download/RELEASE.2025-08-13T08-35-41Z/mc.linux-amd64.RELEASE.2025-08-13T08-35-41Z > mc; \
+    echo '01f866e9c5f9b87c2b09116fa5d7c06695b106242d829a8bb32990c00312e891  mc' | sha256sum -c -; \
+    mv mc /usr/local/bin/mc; \
     chmod +x /usr/local/bin/mc; \
-    sha256sum /usr/local/bin/mc | grep '^aa58e16c74c38bc05ecf73bedee476eafb3a1c42ea1ac95635853b530a36be93 '; \
     mc --version
 
 # Install rclone
